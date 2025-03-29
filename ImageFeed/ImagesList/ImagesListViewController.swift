@@ -29,16 +29,11 @@ final class ImagesListViewController: UIViewController {
     }()
 
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return
-        }
+        let imageName = photosName[indexPath.row]
+        let dateText = dateFormatter.string(from: Date())
+        let isLiked = indexPath.row % 2 == 0
         
-        cell.cellImage.image = image
-        
-        cell.dateLabel.text = dateFormatter.string(from: Date.now)
-        
-        let name = indexPath.row.isMultiple(of: 2) ? "like_button_on" : "like_button_off"
-        cell.likeButton.imageView?.image = UIImage(named: name)
+        cell.configure(imageName: imageName, dateText: dateText, isLiked: isLiked)
     }
 }
 
@@ -71,7 +66,11 @@ extension ImagesListViewController: UITableViewDelegate {
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let cellWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let scale = image.size.height / image.size.width
-        return (cellWidth * scale) + imageInsets.top + imageInsets.bottom
+        if image.size.height != 0, image.size.width != 0 {
+            let scale = image.size.height / image.size.width
+            return (cellWidth * scale) + imageInsets.top + imageInsets.bottom
+        } else {
+            return 200
+        }
     }
 }
