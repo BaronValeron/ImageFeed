@@ -11,6 +11,7 @@ final class SingleImageViewController: UIViewController {
     var image: UIImage? {
         didSet {
             guard isViewLoaded else { return }
+            
             imageView.image = image
             if let image {
                 imageView.frame.size = image.size
@@ -40,6 +41,7 @@ final class SingleImageViewController: UIViewController {
     
     @IBAction func didTapShareButton(_ sender: Any) {
         guard let image else { return }
+        
         let share = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
@@ -76,7 +78,7 @@ final class SingleImageViewController: UIViewController {
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
+        imageView
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {

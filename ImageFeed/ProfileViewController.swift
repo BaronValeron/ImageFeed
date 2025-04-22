@@ -9,13 +9,6 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
-    var avatarImageView: UIImageView!
-    var nameLabel: UILabel!
-    var loginNameLabel: UILabel!
-    var descriptionLabel: UILabel!
-    
-    var logoutButton: UIButton!
-    
     private enum LayoutConstants {
         static let avatarSize: CGFloat = 70
         static let logoutButtonSize: CGFloat = 44
@@ -24,8 +17,60 @@ final class ProfileViewController: UIViewController {
         static let topOffset: CGFloat = 32
     }
     
+    private enum Constants {
+        static let avatarPhoto = "avatar_photo"
+        static let logoutButton = "logout_button"
+        static let redColor = "YP Red"
+        static let grayColor = "YP Gray"
+        static let whiteColor = "YP White"
+    }
+    
+    private lazy var avatarImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: Constants.avatarPhoto) ?? UIImage()
+        imageView.tintColor = UIColor(named: Constants.grayColor)
+        return imageView
+    }()
+    
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Екатерина Новикова"
+        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.textColor = UIColor(named: Constants.whiteColor) ?? .white
+        return label
+    }()
+    
+    private lazy var loginNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "@ekaterina_nov"
+        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        label.textColor = UIColor(named: Constants.grayColor) ?? .gray
+        return label
+    }()
+    
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Hello, world!"
+        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        label.textColor = UIColor(named: Constants.whiteColor) ?? .white
+        return label
+    }()
+    
+    private lazy var logoutButton: UIButton = {
+        let button = UIButton.systemButton(
+            with: UIImage(named: Constants.logoutButton) ?? UIImage(),
+            target: self,
+            action: #selector(didTapLogoutButton)
+        )
+        button.tintColor = UIColor(named: Constants.redColor)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addSubviews()
+        
         configureAvatarImageView()
         configureLogoutButton()
         configureNameLabel()
@@ -33,14 +78,14 @@ final class ProfileViewController: UIViewController {
         configureDescriptionLabel()
     }
     
+    private func addSubviews() {
+        [avatarImageView, logoutButton, nameLabel, loginNameLabel, descriptionLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+    }
+    
     private func configureAvatarImageView() {
-        guard let profileImage = UIImage(named: "avatar_photo") else { return }
-        avatarImageView = UIImageView()
-        avatarImageView.image = profileImage
-        avatarImageView.tintColor = .gray
-        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(avatarImageView)
-        
         NSLayoutConstraint.activate([
             avatarImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.avatarSize),
             avatarImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.avatarSize),
@@ -50,16 +95,6 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureLogoutButton() {
-        guard let logoutIcon = UIImage(named: "logout_button") else { return }
-        logoutButton = UIButton.systemButton(
-            with: logoutIcon,
-            target: self,
-            action: #selector(didTapLogoutButton)
-        )
-        logoutButton.tintColor = .red
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(logoutButton)
-        
         NSLayoutConstraint.activate([
             logoutButton.heightAnchor.constraint(equalToConstant: LayoutConstants.logoutButtonSize),
             logoutButton.widthAnchor.constraint(equalToConstant: LayoutConstants.logoutButtonSize),
@@ -69,12 +104,6 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureNameLabel() {
-        nameLabel = createLabel(
-            text: "Екатерина Новикова",
-            font: UIFont.systemFont(ofSize: 23, weight: .bold),
-            textColor: .white
-        )
-        view.addSubview(nameLabel)
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: LayoutConstants.verticalPadding),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
@@ -83,13 +112,6 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureLoginNameLabel() {
-        loginNameLabel = createLabel(
-            text: "@ekaterina_nov",
-            font: UIFont.systemFont(ofSize: 13, weight: .regular),
-            textColor: .gray
-        )
-        view.addSubview(loginNameLabel)
-        
         NSLayoutConstraint.activate([
             loginNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: LayoutConstants.verticalPadding),
             loginNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
@@ -98,27 +120,11 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureDescriptionLabel() {
-        descriptionLabel = createLabel(
-            text: "Hello, world!",
-            font: UIFont.systemFont(ofSize: 13, weight: .regular),
-            textColor: .white
-        )
-        view.addSubview(descriptionLabel)
-        
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: loginNameLabel.bottomAnchor, constant: LayoutConstants.verticalPadding),
             descriptionLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor)
         ])
-    }
-    
-    private func createLabel(text: String, font: UIFont, textColor: UIColor) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.font = font
-        label.textColor = textColor
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }
     
     @objc

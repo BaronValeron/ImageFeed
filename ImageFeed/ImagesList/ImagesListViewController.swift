@@ -9,7 +9,7 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    private let photoNames = (0..<20).map(String.init)
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     @IBOutlet private var tableView: UITableView!
@@ -33,7 +33,7 @@ final class ImagesListViewController: UIViewController {
                 return
             }
             
-            let image = UIImage(named: photosName[indexPath.row])
+            let image = UIImage(named: photoNames[indexPath.row])
             viewController.image = image
         } else {
             super.prepare(for: segue, sender: sender)
@@ -49,7 +49,7 @@ final class ImagesListViewController: UIViewController {
     }()
 
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let imageName = photosName[indexPath.row]
+        let imageName = photoNames[indexPath.row]
         let dateText = dateFormatter.string(from: Date())
         let isLiked = indexPath.row % 2 == 0
         
@@ -59,7 +59,7 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photoNames.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -76,7 +76,7 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
+        guard let image = UIImage(named: photoNames[indexPath.row]) else {
             return 0
         }
         
